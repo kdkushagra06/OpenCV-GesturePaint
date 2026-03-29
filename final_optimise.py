@@ -115,11 +115,11 @@ while cap.isOpened():
                 frame,
                 hand_landmarks,
                 mp_hands_connections,
-                None,  # ❌ removes default points
+                None,  #  removes default points
                 mp_draw.DrawingSpec(color=(127, 127, 127), thickness=2)
             )
 
-            hlm = hand_landmarks.landmark  # ✅ FIXED
+            hlm = hand_landmarks.landmark  #  FIXED
 
             # Draw custom circles (clean look)
             for lm in hlm:
