@@ -1,60 +1,186 @@
 # OpenCV-GesturePaint
 A real-time computer vision application that enables users to draw on a virtual canvas using hand gestures and facial cues. Built with OpenCV and MediaPipe, the system dynamically changes drawing color based on face detection, creating an intuitive, touchless interaction experience.
 
-# OpenCV-GesturePaint - AI Powered Air Drawing with Emotion Detection
+# 🖌️ OpenCV-GesturePaint (Air Drawing with Emotion Control)
 
-EmotionInk is a Computer Vision based touchless drawing system that allows users to draw in air using hand gestures while dynamically changing the drawing color based on facial emotion detection. The project combines Hand Tracking, Gesture Recognition, and Facial Emotion Analysis to create an interactive human-computer interaction system.
+A real-time computer vision system that enables **touchless drawing using hand gestures**, enhanced with **facial expression–based color control** and **smoothed motion tracking**.
 
-## Features
+This project integrates **MediaPipe Hand Tracking + Face Mesh + OpenCV rendering**, along with **temporal smoothing and gesture logic** to create a stable and responsive drawing experience. 
 
-* Air Drawing using Hand Gestures
-* Eraser Mode using Two-Finger Gesture
-* Facial Emotion Detection (Happy / Sad / Neutral)
-* Emotion-Based Color Changing Brush
-* Smooth Drawing using Deque Smoothing Algorithm
-* Real-Time Canvas Overlay
-* Custom Hand Skeleton Visualization
-* Eraser Icon Overlay
-* Optimized for Real-Time Performance
+---
 
-## Technologies Used
+##  Key Features
 
-* Python
-* OpenCV
-* MediaPipe
-* NumPy
-* Computer Vision
-* Machine Learning (Landmark-Based Emotion Detection)
+###  Gesture-Based Drawing
 
-## System Workflow
+* Draw in air using your **index finger**
+* Fully touchless interaction via webcam
 
-1. Webcam captures live video.
-2. MediaPipe detects hand landmarks.
-3. Index finger tip is used as drawing pointer.
-4. Deque smoothing algorithm reduces hand jitter.
-5. Face Mesh detects facial landmarks.
-6. Mouth landmarks are used to detect emotion.
-7. Brush color changes based on detected emotion.
-8. Canvas is merged with webcam feed using bitwise masking.
+###  Emotion-Based Color Switching
 
-## Controls
+* Detects facial expression using face landmarks
+* Automatically changes drawing color:
 
-| Gesture                  | Action |
-| ------------------------ | ------ |
-| Index Finger Up          | Draw   |
-| Index + Middle Finger Up | Erase  |
-| Press X                  | Exit   |
+  * Happy → Green
+  * Sad → Red
+  * Neutral → Default
 
-## Future Improvements
+###  Smart Eraser Mode
 
-* Add more emotions (Angry, Surprise)
-* Add color selection gestures
-* Add shape drawing mode
-* Add save canvas feature
-* Add virtual mouse mode
-* Build GUI buttons
+* Activate using **index + middle finger**
+* Uses thicker stroke to erase
+* Displays **eraser icon overlay on fingertip**
 
-## Author
+###  Advanced Smoothing (Important)
 
-Kushagra Divya
+* Uses `deque` buffer for **temporal smoothing**
+* Applies **moving average filtering**:
+
+  ```python
+  points = deque(maxlen=7)
+  avg_x = mean(x_points)
+  avg_y = mean(y_points)
+  ```
+* Significantly reduces jitter and noisy tracking
+
+###  Optimized Rendering Pipeline
+
+* Separate canvas layer
+* Efficient merging using:
+
+  * Bitwise masking
+  * Foreground-background blending
+
+---
+
+## Tech Stack
+
+* **OpenCV** → Image processing & rendering
+* **MediaPipe** → Hand tracking + Face mesh
+* **NumPy** → Numerical operations
+* **Deque (collections)** → Temporal smoothing
+
+---
+
+##  System Architecture
+
+### 1. Face Analysis → Emotion Detection
+
+* Extract facial landmarks using MediaPipe FaceMesh
+* Compute:
+
+  * Lip distance → Smile detection
+  * Mouth width → Expression classification
+* Maintain **emotion buffer (deque)** for stability
+* Final emotion = most frequent value
+
+---
+
+### 2. Hand Tracking → Gesture Control
+
+* Track **index fingertip (landmark 8)**
+* Gesture logic:
+
+  * Index up → Draw
+  * Index + Middle up → Erase
+  * No hand → Reset tracking
+
+---
+
+### 3. Motion Smoothing
+
+* Store last N positions using deque
+* Apply **moving average** to compute stable coordinates
+* Eliminates high-frequency noise
+
+---
+
+### 4. Drawing Engine
+
+* Draw lines between previous and current smoothed points
+* Uses:
+
+  * Anti-aliased lines for drawing
+  * Thick strokes for erasing
+
+---
+
+### 5. Canvas Composition
+
+* Maintain separate canvas
+* Merge with live frame using:
+
+  * Thresholding
+  * Bitwise operations
+
+---
+
+##  Installation
+
+```bash
+pip install opencv-python mediapipe numpy
+```
+
+---
+
+##  Run the Project
+
+```bash
+python your_script_name.py
+```
+
+Press **`x`** to exit.
+
+---
+
+##  Controls
+
+| Gesture              | Action         |
+| -------------------- | -------------- |
+|  Index finger up   | Draw           |
+|  Index + Middle up | Erase          |
+|  No hand            | Reset tracking |
+
+---
+
+##  Demo
+
+>  Add a GIF/video here — this is critical for showcasing the project.
+
+---
+
+##  Limitations
+
+* Emotion detection is **rule-based (not ML model)**
+* Performance depends on lighting and camera quality
+* Single-hand tracking only
+
+---
+
+##  Future Improvements
+
+* Deep learning–based emotion classification
+* Multi-color gesture palette
+* Shape recognition (circle, rectangle, etc.)
+* Save/export drawings
+* Multi-hand support
+* Kalman filter for advanced smoothing
+
+---
+
+##  What This Project Demonstrates
+
+* Real-time computer vision pipeline design
+* Gesture recognition system
+* Signal smoothing using data structures
+* Human-computer interaction without hardware
+
+---
+
+##  Author
+
+*Kushagra Divya
 AI | Computer Vision | OpenCV | MediaPipe
+
+---
+
